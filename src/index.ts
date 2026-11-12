@@ -12,6 +12,7 @@ const PORT = 4000;
 app.use(express.json());
 
 
+
 app.get("/products", async (req: Request, res: Response) => {
 
   const products = await prisma.product.findMany()
@@ -100,9 +101,9 @@ app.delete('/products/:id', async (req, res) => {
 })
 
 
-app.put('/products/:id', async (req, res) => {
+app.patch('/products/:id', async (req, res) => {
   const id = Number(req.params.id)
-  const { nama, harga, deskripsi } = req.body 
+  const { name, price, description, stock } = req.body
 
   const product = await prisma.product.findUnique({
     where: {
@@ -122,9 +123,10 @@ app.put('/products/:id', async (req, res) => {
       id
     },
     data: {
-      nama,
-      harga,
-      deskripsi,
+      name,
+      price,
+      description,
+      stock
     }
   })
 
@@ -139,3 +141,8 @@ app.put('/products/:id', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+// repository => hanya untuk berhubungan ke database
+// service => logic business
+// controller => menerima request dan mengirim response
+// route => endpoint 
