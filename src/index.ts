@@ -27,7 +27,7 @@ app.get("/products", async (req: Request, res: Response) => {
 });
 
 app.get("/products/:id", async (req: Request, res: Response) => {
-  const idDicari = Number(req.params.id);
+  const idDicari: number = Number(req.params.id);
 
   const product = await prisma.product.findFirst({
     where: {
@@ -72,6 +72,32 @@ app.post("/products", async (req: Request, res: Response) => {
     Data: newProduct,
   });
 });
+
+app.delete('/products/:id', async (req, res) => {
+  const id = Number(req.params.id)
+
+  const product = await prisma.product.findUnique({
+    where: {
+      id
+    }
+  })
+
+  if (!product) {
+    return res.status(404).json({
+      Sukses: false,
+      Pesan: `Produk ${id} tidak ditemukan.`,
+    });
+
+  }
+
+  res.status(201).json({
+    Sukses: true,
+    Pesan: "Produk berhasil dihapus",
+    Data: product,
+  });
+
+
+})
 
 
 
