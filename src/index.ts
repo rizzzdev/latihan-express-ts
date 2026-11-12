@@ -100,6 +100,41 @@ app.delete('/products/:id', async (req, res) => {
 })
 
 
+app.put('/products/:id', async (req, res) => {
+  const id = Number(req.params.id)
+  const { nama, harga, deskripsi } = req.body 
+
+  const product = await prisma.product.findUnique({
+    where: {
+      id
+    }
+  })
+
+  if (!product) {
+    return res.status(404).json({
+      Sukses: false,
+      Pesan: `Produk ${id} tidak ditemukan.`,
+    })
+  }
+
+  const updatedProduct = await prisma.product.update({
+    where: {
+      id
+    },
+    data: {
+      nama,
+      harga,
+      deskripsi,
+    }
+  })
+
+  res.status(200).json({
+    Sukses: true,
+    Pesan: "Produk berhasil diperbarui",
+    Data: updatedProduct,
+  })
+})
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
